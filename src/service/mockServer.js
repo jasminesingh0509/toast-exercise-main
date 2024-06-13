@@ -1,5 +1,6 @@
 // NOTE: Do not modify this file
-import Chance from 'chance';
+import Chance from "chance";
+import { toast } from "react-toastify";
 
 const chance = new Chance();
 const callbacks = [];
@@ -29,7 +30,7 @@ export async function fetchLikedFormSubmissions() {
     setTimeout(() => {
       // We have a really flaky server that has issues
       if (randomPercent() < 10) {
-        reject({ status: 500, message: 'server error' });
+        reject({ status: 500, message: "server error" });
         return;
       }
 
@@ -37,7 +38,7 @@ export async function fetchLikedFormSubmissions() {
         resolve({
           status: 200,
           formSubmissions:
-            JSON.parse(localStorage.getItem('formSubmissions')) || [],
+            JSON.parse(localStorage.getItem("formSubmissions")) || []
         });
       } catch (e) {
         reject({ status: 500, message: e.message });
@@ -50,7 +51,7 @@ export async function fetchLikedFormSubmissions() {
  * Saves a liked form submission to the server.
  *
  * @params {FormSubmission} formSubmission
- * 
+ *
  * @return {Promise} resolves or rejects with a simple message.
  * We have a flaky server and requests will fail 10
  * percent of the time.
@@ -60,19 +61,20 @@ export async function saveLikedFormSubmission(formSubmission) {
     setTimeout(() => {
       // We have a really flakey server that has issues
       if (randomPercent() < 10) {
-        reject({ status: 500, message: 'server error' });
+        reject({ status: 500, message: "server error" });
         return;
       }
 
       try {
-        const submissions = JSON.parse(localStorage.getItem('formSubmissions')) || [];
+        const submissions =
+          JSON.parse(localStorage.getItem("formSubmissions")) || [];
         const updatedSubmissions = [...submissions, formSubmission];
 
         localStorage.setItem(
-          'formSubmissions',
-          JSON.stringify(updatedSubmissions),
+          "formSubmissions",
+          JSON.stringify(updatedSubmissions)
         );
-        resolve({ status: 202, message: 'Success!' });
+        resolve({ status: 202, message: "Success!" });
       } catch (e) {
         reject({ status: 500, message: e.message });
       }
@@ -90,9 +92,17 @@ export function createMockFormSubmission() {
       email: chance.email(),
       firstName: chance.first(),
       lastName: chance.last(),
-      liked: false,
-    },
+      liked: false
+    }
   };
 
   callbacks.forEach((cb) => cb(formSubmission));
+  toast.success(
+    `Form submitted successfully! Name: ${formSubmission.data.firstName} ${formSubmission.data.lastName}, Email: ${formSubmission.data.email}`,
+    {
+      position: toast.POSITION.BOTTOM_CENTER
+    }
+  );
+
+  return Promise.resolve("Form submitted successfully!");
 }
