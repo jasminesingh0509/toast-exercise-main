@@ -1,5 +1,3 @@
-import React from "react";
-
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -7,15 +5,9 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import React from "react";
 
-import { createMockFormSubmission } from "./service/mockServer";
-
-export default function Header() {
-  const handleSubmit = () => {
-    createMockFormSubmission()
-      .then((success) => console.log(success))
-      .catch((error) => console.error(error));
-  };
+export default function Header({ onNewSubmission }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -35,7 +27,7 @@ export default function Header() {
             variant="contained"
             size="small"
             color="secondary"
-            onClick={() => handleSubmit()}
+            onClick={onNewSubmission}
           >
             New Submission
           </Button>

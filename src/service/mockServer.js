@@ -1,6 +1,5 @@
 // NOTE: Do not modify this file
 import Chance from "chance";
-import { toast } from "react-toastify";
 
 const chance = new Chance();
 const callbacks = [];
@@ -97,12 +96,5 @@ export function createMockFormSubmission() {
   };
 
   callbacks.forEach((cb) => cb(formSubmission));
-  toast.success(
-    `Form submitted successfully! Name: ${formSubmission.data.firstName} ${formSubmission.data.lastName}, Email: ${formSubmission.data.email}`,
-    {
-      position: toast.POSITION.BOTTOM_CENTER
-    }
-  );
-
-  return Promise.resolve("Form submitted successfully!");
+  return Promise.resolve(formSubmission);
 }
