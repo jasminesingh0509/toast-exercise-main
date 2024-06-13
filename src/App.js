@@ -16,7 +16,17 @@ function App() {
         toast.success(
           `Form submitted successfully! Name: ${formSubmission.data.firstName} ${formSubmission.data.lastName}, Email: ${formSubmission.data.email}`,
           {
-            position: toast.POSITION.BOTTOM_CENTER
+            position: toast.POSITION.BOTTOM_CENTER,
+            autoClose: 5000,
+            closeButton: (
+              <button
+                onClick={() => {
+                  formSubmission.data.liked = true;
+                }}
+              >
+                Liked
+              </button>
+            )
           }
         );
       })
