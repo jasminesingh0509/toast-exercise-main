@@ -15,7 +15,15 @@ function App() {
   const [submissions, setSubmissions] = useState([]);
 
   useEffect(() => {
-    fetchLikedFormSubmissions();
+    const loadSubmissions = async () => {
+      try {
+        const data = await fetchLikedFormSubmissions();
+        setSubmissions(data.formSubmissions);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    loadSubmissions();
   }, []);
 
   const handleNewSubmission = () => {
