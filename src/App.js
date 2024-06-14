@@ -29,54 +29,56 @@ function App() {
   const handleNewSubmission = () => {
     createMockFormSubmission()
       .then((formSubmission) => {
-        setSubmissions((prevSubmissions) => [
-          ...prevSubmissions,
-          formSubmission
-        ]);
-        toast.info(
-          `Name: ${formSubmission.data.firstName} ${formSubmission.data.lastName} \n Email: ${formSubmission.data.email}`,
-          {
-            position: toast.POSITION.BOTTOM_CENTER,
-            autoClose: 5000,
-            closeButton: (
-              <>
-                <Button
-                  size="small"
-                  color="secondary"
-                  onClick={() => {
-                    formSubmission.data.liked = true;
-                    saveLikedFormSubmission(formSubmission)
-                      .then((response) => {
-                        if (response.status === 202) {
-                          handleLikedSubmission(formSubmission);
-                          toast.success("Submission liked successfully!", {
-                            position: toast.POSITION.BOTTOM_CENTER
-                          });
-                        } else {
-                          toast.error("Failed to save liked submission", {
-                            position: toast.POSITION.BOTTOM_CENTER
-                          });
-                        }
-                      })
-                      .catch((error) => {
-                        toast.error(
-                          `Error saving liked submission: ${error.message}`,
-                          {
-                            position: toast.POSITION.BOTTOM_CENTER
-                          }
-                        );
-                      });
-                    toast.dismiss();
-                  }}
-                >
-                  Like
-                </Button>
-              </>
-            )
-          }
-        );
+        handleSubmissionSuccess(formSubmission);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const handleSubmissionSuccess = (formSubmission) => {
+    setSubmissions((prevSubmissions) => [...prevSubmissions, formSubmission]);
+    toast.info(
+      `Name: ${formSubmission.data.firstName} ${formSubmission.data.lastName} \n Email: ${formSubmission.data.email}`,
+      {
+        position: toast.POSITION.BOTTOM_CENTER,
+        autoClose: 5000,
+        closeButton: (
+          <>
+            <Button
+              size="small"
+              color="secondary"
+              onClick={() => handleLikeButtonClick(formSubmission)}
+            >
+              Like
+            </Button>
+          </>
+        )
+      }
+    );
+  };
+
+  const handleLikeButtonClick = (formSubmission) => {
+    formSubmission.data.liked = true;
+    saveLikedFormSubmission(formSubmission)
+      .then((response) => {
+        if (response.status === 202) {
+          handleLikedSubmission(formSubmission);
+          toast.success("Submission liked successfully!", {
+            position: toast.POSITION.BOTTOM_CENTER
+          });
+        } else {
+          toast.error("Failed to save liked submission", {
+            position: toast.POSITION.BOTTOM_CENTER
+          });
+        }
+      })
+      .catch((error) => {
+        toast.error(`Error saving liked submission: ${error.message}`, {
+          position: toast.POSITION.BOTTOM_CENTER
+        });
+      });
+    toast.dismiss();
   };
 
   const handleLikedSubmission = (formSubmission) => {
